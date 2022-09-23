@@ -67,3 +67,6 @@ python3 manage.py migrate
         urlpatterns = [
             path('api/', include(router.urls)),
         ]
+
+### Создаем суперпользователя для админки
+python manage.py createsuperuser
