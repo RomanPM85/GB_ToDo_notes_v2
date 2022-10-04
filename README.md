@@ -302,3 +302,11 @@ username, firstname, lastname, email. Если выбрать все поля, �
         class Meta:
             model = TODO
             fields = '__all__'
+
+##### Создаем маршрутизаторы для приложения моделей Project ToDo (/GB_TODO_notes_v2/urls.py):
+### Импортируем ViewSets
+    from todo.views import ProjectModelViewSet, TODOModelViewSet
+
+### Регистрируем
+    router.register('todo', ProjectModelViewSet)
+    router.register('todo', TODOModelViewSet)
