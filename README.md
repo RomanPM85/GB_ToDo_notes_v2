@@ -310,3 +310,13 @@ username, firstname, lastname, email. Если выбрать все поля, �
 ### Регистрируем
     router.register('todo', ProjectModelViewSet)
     router.register('todo', TODOModelViewSet)
+
+#### Проводим миграции в БД
+Проведем тестовый запуск миграций
+
+    python manage.py makemigrations --dry-run
+
+Если все хорошо, проводим миграции в БД
+
+    python3 manage.py makemigrations
+    python3 manage.py migrate

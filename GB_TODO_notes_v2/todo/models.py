@@ -13,12 +13,12 @@ class Project(models.Model):
 
 class TODO(models.Model):
     STATUS_CHOICES = [
-        ('ac', 'active'),
-        ('сl', 'closed'),
+        ('a', 'active'),
+        ('с', 'closed'),
     ]
     project = models.OneToOneField(Project, on_delete=models.CASCADE)
     text = models.TextField(null=True, blank=True, help_text='поле для заметок')
     create_publish = models.DateField(auto_now_add=True, help_text='поле даты создания заметки')
     update_publish = models.DateField(auto_now=True, help_text='поле даты обновления заметки')
-    author = models.ForeignKey(User, blank=True, null=True, help_text='поля авто заметки')
+    users = models.ForeignKey(User, on_delete=models.CASCADE, blank=True, null=True, help_text='поля авто заметки')
     status = models.CharField(max_length=1, choices=STATUS_CHOICES, help_text='поле статуса,активная или закрыта')
