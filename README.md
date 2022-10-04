@@ -25,6 +25,8 @@ username, firstname, lastname, email. Если выбрать все поля, �
     pip install djangorestframework  # Установка DRF
     pip install markdown       # Markdown support for the browsable API.
     pip install django-filter  # Filtering support
+#### Создание нужных пакетов
+    pip freeze > requirements.txt
 
 #### Создаем модель Users:
         class Users(models.Model):
@@ -149,7 +151,10 @@ username, firstname, lastname, email. Если выбрать все поля, �
 #### Настройка политики CORS
     pip install django-cors-headers
 
-#### Добавляем приложение в INSTALLED_APPS (/library/settings.py)
+#### Обновление нужных пакетов
+    pip freeze > requirements.txt
+
+#### Добавляем приложение в INSTALLED_APPS (/GB_TODO_notes_v2/settings.py)
     INSTALLED_APPS = [
         ...
         'corsheaders',
@@ -233,3 +238,67 @@ username, firstname, lastname, email. Если выбрать все поля, �
         ...
     }
     export default App;
+
+### Последовательность действий tasks lesson-3
+#### Задачи:
+1. В проекте создать новое приложение для работы с TODO.
+2. Добавить модель Project. Это проект, для которого записаны TODO. У него есть название,
+может быть ссылка на репозиторий и набор пользователей, которые работают с этим
+проектом. Создать модель, выбрать подходящие типы полей и связей с другими моделями.
+3. Добавить модель TODO. Это заметка. У ToDo есть проект, в котором сделана заметка, текст
+заметки, дата создания и обновления, пользователь, создавший заметку. Содержится и
+признак — активно TODO или закрыто. Выбрать подходящие типы полей и связей с другими
+моделями.
+4. Создать API для моделей Projects и ToDo. Пока можно использовать ViewSets по аналогии с
+моделью User.
+5. При сериализации моделей выбрать нужный вид для связанных моделей.
+6. (Задание со *) На стороне клиента используется camelCase в отличие от snake_case, который мы используем в python. Реализовать представление данных в виде camelCase(https://www.django-rest-framework.org/api-guide/parsers/#camelcase-json).
+
+#### Созданием новое приложения для работы с TODO:
+    python manage.py startapp todo
+
+#### Регистрируем приложение в INSTALLED_APPS (/GB_TODO_notes_v2/settings.py):
+    INSTALLED_APPS = [
+        ...
+        'todo',
+        ...
+    ]
+
+#### Создаем модель Project и TODO:
+
+    class Project(models.Model):
+        title = models.CharField(max_length=24, blank=True, help_text='Заголовок проекта')
+        linkGitHub = models.URLField(max_length=200, null=True, blank=True, help_text='Ссылка на репозиторий GitHub')
+        users = models.ManyToManyField(User)
+    
+    
+    class TODO(models.Model):
+        STATUS_CHOICES = [
+            ('ac', 'active'),
+            ('сl', 'closed'),
+        ]
+        project = models.OneToOneField(Project, on_delete=models.CASCADE)
+        text = models.TextField(null=True, blank=True, help_text='поле для заметок')
+        create_publish = models.DateField(auto_now_add=True, help_text='поле даты создания заметки')
+        update_publish = models.DateField(auto_now=True, help_text='поле даты обновления заметки')
+        author = models.ForeignKey(User, blank=True, null=True, help_text='поля авто заметки')
+        status = models.CharField(max_length=1, choices=STATUS_CHOICES, help_text='поле статуса,активная или закрыта')
+
+
+#### Создаем сериализацию моделей Project и TODO (/GB_TODO_notes_v2/todo/serializers.py):
+    touch serializers.py
+##### Добавляем следующий код в (/GB_TODO_notes_v2/todo/serializers.py):
+    from rest_framework.serializers import ModelSerializer
+    from .models import Project, TODO
+    
+    
+    class ProjectModelSerializer(ModelSerializer):
+        class Meta:
+            model = Project
+            fields = '__all__'
+    
+    
+    class TODOModelSerializer(ModelSerializer):
+        class Meta:
+            model = TODO
+            fields = '__all__'
