@@ -31,7 +31,7 @@ class Migration(migrations.Migration):
                 ('update_publish', models.DateField(auto_now=True, help_text='поле даты обновления заметки')),
                 ('status', models.CharField(choices=[('a', 'active'), ('с', 'closed')], help_text='поле статуса,активная или закрыта', max_length=1)),
                 ('project', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, to='todo.project')),
-                ('users', models.ForeignKey(blank=True, help_text='поля авто заметки', null=True, on_delete=django.db.models.deletion.CASCADE, to='users.user')),
+                ('users', models.ForeignKey(blank=True, help_text='автор заметки', null=True, on_delete=django.db.models.deletion.CASCADE, to='users.user')),
             ],
         ),
     ]
