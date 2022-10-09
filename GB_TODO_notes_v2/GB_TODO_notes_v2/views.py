@@ -77,14 +77,24 @@ class ToDoDetailAPIView(APIView):
         return Response(serializer.data)
 
 
+class ToDoLimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 20
+
+
 class ToDoDjangoFilterViewSet(ModelViewSet):
     queryset = TODO.objects.all()
     serializer_class = TODOModelSerializer
     # filter_backends = [DjangoFilterBackend]
     filterset_class = ToDoFilter
+    pagination_class = ToDoLimitOffsetPagination
+
+
+class ProjectDLimitOffsetPagination(LimitOffsetPagination):
+    default_limit = 10
 
 
 class ProjectDjangoFilterViewSet(ModelViewSet):
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
     filterset_class = ProjectFilter
+    pagination_class = ProjectDLimitOffsetPagination
