@@ -17,19 +17,18 @@ from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 
-from GB_TODO_notes_v2.views import UserCustomViewSet, ToDoAPIView
-from users.views import UserModelViewSet
+from GB_TODO_notes_v2.views import UserCustomViewSet, ToDoListAPIView, ToDoDetailAPIView
 from todo.views import ProjectModelViewSet, TODOModelViewSet
 
 router = DefaultRouter()
-# router.register('users', UserModelViewSet)
 router.register('users', UserCustomViewSet)
 router.register('project', ProjectModelViewSet)
-# router.register('todo', TODOModelViewSet)
+router.register('todo', TODOModelViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/', include(router.urls)),
-    path('api-todo/', ToDoAPIView.as_view()),
+    path('api-todo/', ToDoListAPIView.as_view()),
+    path('api-todo/<int:pk>/', ToDoDetailAPIView.as_view()),
 ]

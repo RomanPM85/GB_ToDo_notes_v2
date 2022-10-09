@@ -1,3 +1,4 @@
+from django.http import Http404
 from rest_framework import status
 from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin,\
@@ -26,32 +27,49 @@ class UserCustomViewSet(ListModelMixin, UpdateModelMixin, RetrieveModelMixin, Ge
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
 
-class ToDoAPIView(APIView):
+class ToDoListAPIView(APIView):
+    """
+    Список всех созданных заметок к проекту и возможность
+    создать новую заметку через метод POST.
+    """
     renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
 
     def get(self, request, format=None):
-        pk = request.query_params.get('pk')
         todo = TODO.objects.all()
-        if pk:
-            todo = TODO.filter(id=pk)
-
         serializer = TODOModelSerializer(todo, many=True)
         return Response(serializer.data)
 
-    # def post(self, request, format=None):
-    #     pass
+    def post(self, request, format=None):
+        serializer = TODOModelSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    # def delete(self, request, format=None):
-    #     pass
 
+class ToDoDetailAPIView(APIView):
+    def get_object(self, pk):
+        try:
+            return TODO.objects.get(pk=pk)
+        except TODO.DoesNotExist:
+            raise Http404
 
-# class FilterProjectModelViewSet(ModelViewSet):
-#    queryset = Project.objects.all()
-#    serializer_class = ProjectModelSerializer
-#
-#    def get_queryset(self):
-#        name = self.request.query_params.get('name', '')
-#        project = Project.objects.all()
-#        if name:
-#            project = project.filter(name__contains=name)
-#        return project
+    def get(self, request, pk, format=None):
+        todo = self.get_object(pk)
+        serializer = TODOModelSerializer(todo)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        todo = self.get_object(pk)
+        serializer = TODOModelSerializer(todo, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        todo = self.get_object(pk)
+        serializer = TODOModelSerializer(todo, data={'status': 'с'}, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
