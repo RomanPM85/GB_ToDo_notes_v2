@@ -1,5 +1,6 @@
 from django.http import Http404
-from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import status, viewsets
 from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin,\
     DestroyModelMixin
@@ -11,6 +12,7 @@ from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
 from rest_framework.generics import CreateAPIView, ListAPIView, RetrieveAPIView, DestroyAPIView, UpdateAPIView, \
     get_object_or_404
 
+from todo.filters import ProjectFilter, ToDoFilter
 from todo.models import Project, TODO
 from todo.serializers import ProjectModelSerializer, TODOModelSerializer
 from users.models import User
@@ -73,3 +75,16 @@ class ToDoDetailAPIView(APIView):
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
+
+
+class ToDoDjangoFilterViewSet(ModelViewSet):
+    queryset = TODO.objects.all()
+    serializer_class = TODOModelSerializer
+    # filter_backends = [DjangoFilterBackend]
+    filterset_class = ToDoFilter
+
+
+class ProjectDjangoFilterViewSet(ModelViewSet):
+    queryset = Project.objects.all()
+    serializer_class = ProjectModelSerializer
+    filterset_class = ProjectFilter

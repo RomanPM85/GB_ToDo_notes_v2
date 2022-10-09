@@ -3,7 +3,7 @@ from .models import Project, TODO
 
 
 class ProjectFilter(filters.FilterSet):
-    name = filters.CharFilter(lookup_expr='contains')
+    title = filters.CharFilter(lookup_expr='contains')
 
     class Meta:
         model = Project
@@ -11,8 +11,8 @@ class ProjectFilter(filters.FilterSet):
 
 
 class ToDoFilter(filters.FilterSet):
-    name = filters.CharFilter(lookup_expr='contains')
+    text = filters.CharFilter(lookup_expr='contains')
 
     class Meta:
         model = TODO
-        fields = ['project']
+        fields = ['text', 'status']
