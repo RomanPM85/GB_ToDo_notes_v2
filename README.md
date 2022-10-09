@@ -362,33 +362,139 @@ username, firstname, lastname, email. Если выбрать все поля, �
         serializer_class = ProjectModelSerializer
 
 
-#### Создаем класс ToDoCustomViewSet
-● модель ToDo: доступны все варианты запросов; при удалении не удалять 
+#### Создаем класс ToDoListAPIView (/GB_TODO_notes_v2/views.py)
+● класс для модели ToDo: доступны все варианты запросов; при удалении не удалять 
 ToDo, а выставлять признак, что оно закрыто;
 
-    class ToDoAPIView(APIView):
-        renderer_classes = [JSONRenderer,BrowsableAPIRenderer]
-        def get(self,request,format=None):
-            pk = request.query_params.get('pk')
-            todo = ToDo.objects.all()
-            if pk:
-               todo= ToDo.filter(id=pk)
+    class ToDoListAPIView(APIView):
+        """
+        Список всех созданных заметок к проекту и возможность
+        создать новую заметку через метод POST.
+        """
+        renderer_classes = [JSONRenderer, BrowsableAPIRenderer]
     
-            serializer = ToDoModelSerializer(todo, many=True)
+        def get(self, request, format=None):
+            todo = TODO.objects.all()
+            serializer = TODOModelSerializer(todo, many=True)
             return Response(serializer.data)
     
-        def post(self,request,format=None):
-            pass
+        def post(self, request, format=None):
+            serializer = TODOModelSerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+● Дополнительный класс для модели ToDo: 
+при удалении не удалять ToDo, а выставлять признак, что оно закрыто;
+
+    class ToDoDetailAPIView(APIView):
+        """
+        Класс для отображения одной записи с возможностью
+        обновить частично обновить запись, а также при
+        удалении перевести запись в закрытую.
+        """
+        def get_object(self, pk):
+            try:
+                return TODO.objects.get(pk=pk)
+            except TODO.DoesNotExist:
+                raise Http404
     
-        def delete(self,request,format=None):
-           pass
+        def get(self, request, pk, format=None):
+            todo = self.get_object(pk)
+            serializer = TODOModelSerializer(todo)
+            return Response(serializer.data)
+    
+        def put(self, request, pk, format=None):
+            todo = self.get_object(pk)
+            serializer = TODOModelSerializer(todo, data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+        def delete(self, request, pk, format=None):
+            todo = self.get_object(pk)
+            serializer = TODOModelSerializer(todo, data={'status': 'с'}, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+            return Response(serializer.data)
 
 
-#### Добавим общие настройки проекта Rest Framework
+#### Создаем фильтрацию и пагинацию для моделей Project и TODO:
+### Создадим файл filters.py (/GB_TODO_notes_v2/filters.py) для фильтрации и внесем следующий код: 
+
+    from django_filters import rest_framework as filters
+    from .models import Project, TODO
+    
+    
+    class ProjectFilter(filters.FilterSet):
+        title = filters.CharFilter(lookup_expr='contains')
+    
+        class Meta:
+            model = Project
+            fields = ['title']
+    
+    
+    class ToDoFilter(filters.FilterSet):
+        text = filters.CharFilter(lookup_expr='contains')
+    
+        class Meta:
+            model = TODO
+            fields = ['text', 'status']
+
+
+### Внесем изменения в контроллеры, добавим дополнительные классы (/GB_TODO_notes_v2/views.py):
+
+● для модель ToDo:
+
+    class ToDoLimitOffsetPagination(LimitOffsetPagination):
+        """
+        Класс для модели ToDo ограниченного постраничного вывода информации. 
+        """
+        default_limit = 20
+    
+
+    class ToDoDjangoFilterViewSet(ModelViewSet):
+        """
+        Класс для фильтрации модели ToDo.
+        """
+        queryset = TODO.objects.all()
+        serializer_class = TODOModelSerializer
+        # filter_backends = [DjangoFilterBackend]
+        filterset_class = ToDoFilter
+        pagination_class = ToDoLimitOffsetPagination
+
+
+
+● для модель Project: 
+
+    class ProjectDLimitOffsetPagination(LimitOffsetPagination):
+        """
+        Класс для модели Project ограниченного постраничного вывода информации. 
+        """
+        default_limit = 10
+    
+    
+    class ProjectDjangoFilterViewSet(ModelViewSet):
+        """
+        Класс для фильтрации модели Project.
+        """
+        queryset = Project.objects.all()
+        serializer_class = ProjectModelSerializer
+        filterset_class = ProjectFilter
+        pagination_class = ProjectDLimitOffsetPagination
+
+
+
+#### Добавим общие настройки фильтрации и пагинации для проекта Rest Framework.
+
     REST_FRAMEWORK = {
         'DEFAULT_RENDERER_CLASSES': [
             'rest_framework.renderers.JSONRenderer',
             'rest_framework.renderers.BrowsableAPIRenderer',
         ],
         'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+        'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+        'PAGE_SIZE': 100
     }

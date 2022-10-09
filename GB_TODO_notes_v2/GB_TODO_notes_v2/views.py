@@ -50,6 +50,11 @@ class ToDoListAPIView(APIView):
 
 
 class ToDoDetailAPIView(APIView):
+    """
+    Класс для отображения одной записи с возможностью
+    обновить частично обновить запись, а также при
+    удалении перевести запись в закрытую.
+    """
     def get_object(self, pk):
         try:
             return TODO.objects.get(pk=pk)
@@ -78,10 +83,16 @@ class ToDoDetailAPIView(APIView):
 
 
 class ToDoLimitOffsetPagination(LimitOffsetPagination):
+    """
+    Класс для модели ToDo ограниченного постраничного вывода информации.
+    """
     default_limit = 20
 
 
 class ToDoDjangoFilterViewSet(ModelViewSet):
+    """
+    Класс для фильтрации модели ToDo.
+    """
     queryset = TODO.objects.all()
     serializer_class = TODOModelSerializer
     # filter_backends = [DjangoFilterBackend]
@@ -90,10 +101,16 @@ class ToDoDjangoFilterViewSet(ModelViewSet):
 
 
 class ProjectDLimitOffsetPagination(LimitOffsetPagination):
+    """
+    Класс для модели Project ограниченного постраничного вывода информации.
+    """
     default_limit = 10
 
 
 class ProjectDjangoFilterViewSet(ModelViewSet):
+    """
+    Класс для фильтрации модели Project.
+    """
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
     filterset_class = ProjectFilter
