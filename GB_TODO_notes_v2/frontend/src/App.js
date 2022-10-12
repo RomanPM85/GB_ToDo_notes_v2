@@ -7,6 +7,7 @@ import ProjectList from "./components/Project.js";
 import ToDOList from "./components/ToDo.js";
 import MenuItem from "./components/Menu.js";
 import FooterItem from "./components/Footer.js";
+import {BrowserRouter, Route, Routes, Link, Navigate} from "react-router-dom";
 
 class App extends React.Component {
     constructor(props) {
@@ -42,9 +43,13 @@ class App extends React.Component {
         return (
             <div>
                 <MenuItem/>
-                <UserList users={this.state.users}/>
-                <ProjectList projects={this.state.projects}/>
-                <ToDOList todos={this.state.todos}/>
+                <BrowserRouter>
+                    <Routes>
+                        <Route exact path='/users' element={<UserList users={this.state.users}/>}/>
+                        <Route exact path='/projects' element={<ProjectList projects={this.state.projects}/>}/>
+                        <Route exact path='/todos' element={<ToDOList todos={this.state.todos}/>}/>
+                    </Routes>
+                </BrowserRouter>
                 <FooterItem/>
             </div>
         );
