@@ -3,6 +3,7 @@ import axios from "axios";
 //import logo from './logo.svg';
 import './App.css';
 import UserList from "./components/User.js";
+import ProjectList from "./components/Project.js";
 import MenuItem from "./components/Menu.js";
 import FooterItem from "./components/Footer.js";
 
@@ -10,7 +11,8 @@ class App extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            'users': []
+            'users': [],
+            'projects': [],
         };
     }
 
@@ -20,6 +22,12 @@ class App extends React.Component {
                 'users': response.data
             })
         }).catch(error => console.log(error))
+
+        axios.get('http://127.0.0.1:8000/api/projects/').then(response => {
+            this.setState({
+                'projects': response.data
+            })
+        }).catch(error => console.log(error))
     }
 
     render() {
@@ -27,6 +35,7 @@ class App extends React.Component {
             <div>
                 <MenuItem/>
                 <UserList users={this.state.users}/>
+                <ProjectList projects={this.state.projects}/>
                 <FooterItem/>
             </div>
         );

@@ -498,3 +498,14 @@ ToDo, а выставлять признак, что оно закрыто;
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
         'PAGE_SIZE': 100
     }
+
+
+
+## Последовательность действий tasks lesson-5
+#### Устанавливаем библиотеку react-router-dom (/GB_TODO_notes_v2/frontend)
+    npm install react-router-dom
+
+#### Запускаем проект на frontend
+
+    npm run start
+
