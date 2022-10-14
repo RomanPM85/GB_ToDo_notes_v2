@@ -5,7 +5,7 @@ const NotFound404 = () => {
     let {pathname} = useLocation()
     return(
         <div>
-            <h1> Page not found ( {pathname} ) «Ошибка 404 </h1>
+            <h1> Page not found ( {pathname} ) Ошибка 404 </h1>
         </div>
     )
 }

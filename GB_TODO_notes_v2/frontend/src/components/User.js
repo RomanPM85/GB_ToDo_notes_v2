@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom";
 
 const UserItem = ({user}) => {
     return (
@@ -7,7 +8,7 @@ const UserItem = ({user}) => {
                 {user.id}
             </td>
             <td>
-                {user.user_name}
+                <Link to={`/users/${user.id}`}>{user.user_name}</Link>
             </td>
             <td>
                 {user.first_name}

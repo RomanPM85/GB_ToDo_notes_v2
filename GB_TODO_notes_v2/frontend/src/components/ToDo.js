@@ -42,7 +42,7 @@ const ToDOList = ({todos}) => {
                 Update ToDo
             </th>
             <th>
-                Count Users
+                ID User
             </th>
             <th>
                 status ToDo

@@ -4,6 +4,7 @@ import axios from "axios";
 import './App.css';
 import UserList from "./components/User.js";
 import ProjectList from "./components/Project.js";
+import ProjectsUser from "./components/ProjectUser.js";
 import ToDOList from "./components/ToDo.js";
 import MenuItem from "./components/Menu.js";
 import FooterItem from "./components/Footer.js";
@@ -60,7 +61,11 @@ class App extends React.Component {
                         </li>
                     </nav>
                     <Routes>
-                        <Route exact path='/users' element={<UserList users={this.state.users}/>}/>
+                        <Route exact path='/' element={<Navigate to='/users'/>}/>
+                        <Route path ='/users'>
+                            <Route index element={<UserList users={this.state.users}/>}/>
+                            <Route path=':userId' element={<ProjectsUser projects={this.state.projects}/>}/>
+                        </Route>
                         <Route exact path='/projects' element={<ProjectList projects={this.state.projects}/>}/>
                         <Route exact path='/todos' element={<ToDOList todos={this.state.todos}/>}/>
                         <Route path='*' element={<NotFound404/>}/>
