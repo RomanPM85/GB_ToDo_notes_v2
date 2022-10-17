@@ -15,8 +15,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken import views
+from rest_framework.routers import DefaultRouter
+
+from GB_TODO_notes_v2.views import UserCustomViewSet, ToDoListAPIView, ToDoDetailAPIView, ProjectDjangoFilterViewSet, \
+    ToDoDjangoFilterViewSet
+from todo.views import ProjectModelViewSet, TODOModelViewSet
+
+router = DefaultRouter()
+router.register('users', UserCustomViewSet)
+router.register('projects', ProjectModelViewSet)
+router.register('todos', TODOModelViewSet)
+# router.register('todos', ToDoDjangoFilterViewSet)
+# router.register('projects', ProjectDjangoFilterViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
+    path('api-token-auth/', views.obtain_auth_token),
+    path('api/', include(router.urls)),
+    path('api-todo/', ToDoListAPIView.as_view()),
+    path('api-todo/<int:pk>/', ToDoDetailAPIView.as_view()),
 ]
