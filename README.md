@@ -509,3 +509,17 @@ ToDo, а выставлять признак, что оно закрыто;
 
     npm run start
 
+## Последовательность действий tasks lesson-6
+#### Устанавливаем общие права для всего проекта и укажем их в settings.py:
+
+    REST_FRAMEWORK = {
+        'DEFAULT_PERMISSION_CLASSES': [
+            'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+        ],
+
+        'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.BasicAuthentication',
+            'rest_framework.authentication.TokenAuthentication',
+            'rest_framework.authentication.SessionAuthentication',
+        ],
+    }
