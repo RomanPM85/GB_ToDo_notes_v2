@@ -543,3 +543,6 @@ cookies.
 
 #### В папке components создадим файл Auth.js
 
+#### Сохранение токена авторизации
+    npm install universal-cookie
+
