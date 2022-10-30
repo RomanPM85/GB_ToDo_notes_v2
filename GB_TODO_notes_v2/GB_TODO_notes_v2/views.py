@@ -1,6 +1,6 @@
 from django.http import Http404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, permissions
 from rest_framework.decorators import api_view, renderer_classes, action
 from rest_framework.mixins import CreateModelMixin, ListModelMixin, RetrieveModelMixin, UpdateModelMixin,\
     DestroyModelMixin
@@ -111,6 +111,7 @@ class ProjectDjangoFilterViewSet(ModelViewSet):
     """
     Класс для фильтрации модели Project.
     """
+    permission_classes = [permissions.IsAuthenticated]
     queryset = Project.objects.all()
     serializer_class = ProjectModelSerializer
     filterset_class = ProjectFilter

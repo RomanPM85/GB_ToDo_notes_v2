@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from rest_framework import permissions
 from rest_framework.viewsets import ModelViewSet
 
 # Create your views here.
@@ -12,5 +13,6 @@ class ProjectModelViewSet(ModelViewSet):
 
 
 class TODOModelViewSet(ModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
     queryset = TODO.objects.all()
     serializer_class = TODOModelSerializer
