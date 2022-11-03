@@ -540,4 +540,34 @@ cookies.
 4. Данные для тестов удобно создавать, используя mixer.
 5. * Написать минимум один Live test.
 
+### Как запускать тесты
+
+    python3 manage.py test
+
+### Ещё больше тестовой информации
+    python3 manage.py test --verbosity 2
+
+### Запуск определённых тестов
+
+    python manage.py test users.tests.TestUserViewSet.test_get_list
+    python manage.py test users.tests.TestUserViewSet.test_create_guest
+    python manage.py test users.tests.TestUserViewSet.test_create_admin
+
+    python manage.py test users.tests.TestUserViewSet.test_get_detail
+    python manage.py test users.tests.TestUserViewSet.test_edit_guest
+    python manage.py test users.tests.TestUserViewSet.test_edit_admin
+
+    python manage.py test users.tests.TestMath.test_sqrt
+    python manage.py test users.tests.TestProjectsViewSet.test_get_list
+    python manage.py test users.tests.TestProjectsViewSet.test_edit_admin
+    python manage.py test users.tests.TestProjectsViewSet.test_edit_mixer
+
+
+### Для быстрой генерации тестовых данных служит библиотека Mixer. Она позволяет создавать объекты и заполнять их тестовыми данными, а также создавать связанные объекты моделей.
+    pip install mixer
+
+### Запуск определённых тестов
+    python manage.py test users.tests.TestProjectsViewSet.test_edit_mixer
+    python manage.py test users.tests.TestProjectsViewSet.test_get_detail
+    python manage.py test users.tests.TestProjectsViewSet.test_get_detail_users
 
