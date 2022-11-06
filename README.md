@@ -571,3 +571,11 @@ cookies.
     python manage.py test users.tests.TestProjectsViewSet.test_get_detail
     python manage.py test users.tests.TestProjectsViewSet.test_get_detail_users
 
+## Последовательность действий tasks lesson-9
+
+1) Создать новую версию API в проекте, в которой у модели пользователя будут доступны поля
+is_superuser, is_staff. Таким образом, проект будет поддерживать две версии API.
+2) Создать документацию для API, используя drf-yasg.
+3) * Создать часть документации Swagger и/или ReDoc без использования сторонних библиотек.
+Можно использовать минимальные примеры из стандартной документации Swagger и ReDoc.
+
