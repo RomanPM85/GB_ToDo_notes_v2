@@ -584,6 +584,7 @@ is_superuser, is_staff. Таким образом, проект будет по�
     python manage.py startapp userapp
 
 ### В нём создадим файл serializers.py со следующим кодом:
+/GB_TODO_notes_v2/userapp/serializers.py
 
     from django.contrib.auth.models import User
     from rest_framework import serializers
@@ -599,6 +600,7 @@ is_superuser, is_staff. Таким образом, проект будет по�
             fields = ('username', 'email', 'first_name', 'last_name')
 
 ###  Далее в файле views.py напишем следующий код:
+/GB_TODO_notes_v2/userapp/views.py
 
     from rest_framework import generics
     from django.contrib.auth.models import User
@@ -627,9 +629,37 @@ is_superuser, is_staff. Таким образом, проект будет по�
 
 ### При использовании UrlPathVersioning мы можем передать номер версии в URL-адресе. В urls.py добавим следующий код:
 /GB_TODO_notes_v2/urls.py
+
     urlpatterns = [
         ...
         re_path(r'^api/(?P<version>\d\.\d)/users/$', UserListAPIView.as_view()),
         ...
     ]
 
+
+###  Вариант использования класса NamespaceVersioning
+/GB_TODO_notes_v2/urls.py
+
+    REST_FRAMEWORK = {
+        'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.NamespaceVersioning',
+    ...
+    }
+### В приложении userapp локально создадим файл urls.py со следующим кодом:
+/GB_TODO_notes_v2/userapp/urls.py
+
+    from django.urls import path
+    from .views import UserListAPIView
+    
+    app_name = 'userapp'
+    urlpatterns = [
+        path('', UserListAPIView.as_view()),
+    ]
+
+Далее в urls.py всего проекта добавим следующий код:
+/GB_TODO_notes_v2/urls.py
+
+    urlpatterns = [
+        ...
+        path('api/users/0.1', include('userapp.urls', namespace='0.1')),
+        path('api/users/0.2', include('userapp.urls', namespace='0.2')),
+    ]

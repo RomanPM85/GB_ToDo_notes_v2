@@ -38,4 +38,6 @@ urlpatterns = [
     path('api-todo/', ToDoListAPIView.as_view()),
     path('api-todo/<int:pk>/', ToDoDetailAPIView.as_view()),
     re_path(r'^api/(?P<version>\d\.\d)/users/$', UserListAPIView.as_view()),
+    path('api/users/0.1', include('userapp.urls', namespace='0.1')),
+    path('api/users/0.2', include('userapp.urls', namespace='0.2')),
 ]
