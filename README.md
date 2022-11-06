@@ -579,3 +579,57 @@ is_superuser, is_staff. Таким образом, проект будет по�
 3) * Создать часть документации Swagger и/или ReDoc без использования сторонних библиотек.
 Можно использовать минимальные примеры из стандартной документации Swagger и ReDoc.
 
+###  Создаем новое приложение userapp:
+
+    python manage.py startapp userapp
+
+### В нём создадим файл serializers.py со следующим кодом:
+
+    from django.contrib.auth.models import User
+    from rest_framework import serializers
+
+    class UserSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('username', 'email')
+
+    class UserSerializerWithFullName(serializers.ModelSerializer):
+        class Meta:
+            model = User
+            fields = ('username', 'email', 'first_name', 'last_name')
+
+###  Далее в файле views.py напишем следующий код:
+
+    from rest_framework import generics
+    from django.contrib.auth.models import User
+    from .serializers import UserSerializer, UserSerializerWithFullName
+    
+    
+    class UserListAPIView(generics.ListAPIView):
+        queryset = User.objects.all()
+        serializer_class = UserSerializer
+    
+        def get_serializer_class(self):
+            if self.request.version == '0.2':
+                return UserSerializerWithFullName
+            return UserSerializer
+
+Если версия API 0.2, то мы будем использовать UserSerializerWithFullName, во всех остальных
+случаях — UserSerializer.
+
+###  Вариант использовать класс UrlPathVersioning: 
+/GB_TODO_notes_v2/settings.py
+
+    REST_FRAMEWORK = {
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.URLPathVersioning',
+    ...
+    }
+
+### При использовании UrlPathVersioning мы можем передать номер версии в URL-адресе. В urls.py добавим следующий код:
+/GB_TODO_notes_v2/urls.py
+    urlpatterns = [
+        ...
+        re_path(r'^api/(?P<version>\d\.\d)/users/$', UserListAPIView.as_view()),
+        ...
+    ]
+
