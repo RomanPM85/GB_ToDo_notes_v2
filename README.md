@@ -695,9 +695,48 @@ is_superuser, is_staff. Таким образом, проект будет по�
         }
 
 ### Создадим файл schema.py и напишем в нём следующий код:
+    from graphene import ObjectType
+    from graphene_django import DjangoObjectType
+    from users.models import User
+    from todo.models import Project, TODO
     import graphene
 
-    class Query(graphene.ObjectType):
-        hello = graphene.String(default_value="Hi!")
+#### Создадим класс для получения полей пользователей
 
+    class UserType(DjangoObjectType):
+        class Meta:
+            model = User
+            fields = '__all__'
+
+#### Создадим класс для получения полей проектов
+
+    class ProjectType(DjangoObjectType):
+        class Meta:
+            model = Project
+            fields = '__all__'
+
+#### Создадим класс для получения полей заметок
+
+    class TODOType(DjangoObjectType):
+        class Meta:
+            model = TODO
+            fields = '__all__'
+
+#### Создадим класс серилизации
+
+    class Query(ObjectType):
+        all_users = graphene.List(UserType)
+        all_project = graphene.List(ProjectType)
+        all_todo = graphene.List(TODOType)
+    
+        def resolve_all_users(root, info):
+            return User.objects.all()
+    
+        def resolve_all_project(root, info):
+            return Project.objects.all()
+    
+        def resolve_all_todo(root, info):
+            return TODO.objects.all()
+
+#### Создадим объект схемы графена.
     schema = graphene.Schema(query=Query)
