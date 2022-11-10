@@ -670,3 +670,34 @@ is_superuser, is_staff. Таким образом, проект будет по�
 и пользователей, связанных с проектом.
 2) * Подумать, какие ещё гибкие запросы могут быть полезны для этой системы, реализовать
 некоторые из них с помощью GraphQL.
+
+### Установим библиотеку Graphene-Django:
+
+    pip install graphene-django
+
+### Добавим приложение в INSTALLED_APPS:
+    INSTALLED_APPS = [
+        ...
+        "django.contrib.staticfiles", # Required for GraphiQL
+        "graphene_django"
+        ]
+
+### В urls.py проекта добавим адрес для GraphQL-запросов:
+    from django.urls import path
+        from graphene_django.views import GraphQLView
+        urlpatterns = [
+        # ...
+        path("graphql/", GraphQLView.as_view(graphiql=True)),
+        ]
+### Далее в settings.py указываем путь до объекта с описанием схемы:
+    GRAPHENE = {
+        "SCHEMA": "library.schema.schema"
+        }
+
+### Создадим файл schema.py и напишем в нём следующий код:
+    import graphene
+
+    class Query(graphene.ObjectType):
+        hello = graphene.String(default_value="Hi!")
+
+    schema = graphene.Schema(query=Query)

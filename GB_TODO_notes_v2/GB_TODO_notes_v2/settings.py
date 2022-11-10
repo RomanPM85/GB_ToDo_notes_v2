@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'todo',
     'django_filters',
     'drf_yasg',
+    'graphene_django',
 ]
 
 MIDDLEWARE = [
@@ -156,4 +157,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
+}
+
+GRAPHENE = {
+    'SCHEMA': 'GB_TODO_notes_v2.schema.schema'
 }
