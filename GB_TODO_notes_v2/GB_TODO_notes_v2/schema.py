@@ -54,8 +54,25 @@ class Query(ObjectType):
         return Project.objects.all()
 
 
-# class UserUpdateMutation(graphene.Mutation):
-#     pass
+class UserCreateMutation(graphene.Mutation):
+    class Arguments:
+        user_name = graphene.String()
+        first_name = graphene.String()
+        last_name = graphene.String()
+        email = graphene.String()
+
+    user = graphene.Field(UserType)
+
+    @classmethod
+    def mutate(cls, root, info, **kwargs):
+        # user = User.objects.create(user_name, first_name, last_name, email)
+        user = User.objects.create(**kwargs)
+        # user.user_name = user_name
+        # user.first_name = first_name
+        # user.last_name = last_name
+        # user.email = email
+        user.save()
+        return cls(user=user)
 
 
 class UserUpdateMutation(graphene.Mutation):
@@ -76,9 +93,13 @@ class UserUpdateMutation(graphene.Mutation):
         return UserUpdateMutation(user=user)
 
 
+# class UserDeleteMutation(graphene.Mutation):
+#     pass
+
+
 class Mutations(ObjectType):
     update_user = UserUpdateMutation.Field()
-    # create_user = UserCreateMutation.Field()
+    create_user = UserCreateMutation.Field()
     # delete_user = UserDeleteMutation.Field()
 
 
