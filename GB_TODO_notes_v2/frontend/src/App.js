@@ -10,7 +10,8 @@ import MenuItem from "./components/Menu.js"
 import FooterItem from "./components/Footer.js"
 import NotFound404 from "./components/NotFound404"
 import LoginForm from "./components/Auth.js"
-import {BrowserRouter, Route, Routes, Link, Navigate} from "react-router-dom"
+import {BrowserRouter, Route, Routes, Link, Navigate,Redirect} from "react-router-dom"
+import ProjectForm from "./components/ProjectForm";
 import Cookies from 'universal-cookie';
 
 class App extends React.Component {
@@ -41,6 +42,18 @@ class App extends React.Component {
         this.setState({todos: this.state.todos.filter((todo)=>todo.id !==
         id)})
         }).catch(error => console.log(error))
+    }
+
+    create_project(title, linkGitHub, users) {
+        const headers = this.get_headers()
+        const data = {title: title, linkGitHub: linkGitHub, users: users}
+        axios.post(`http://127.0.0.1:8000/api/projects/`,data,{headers})
+        .then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({projects: []})
+        })
     }
 
     delete_project(id){
@@ -115,7 +128,10 @@ class App extends React.Component {
                         <li><Link to='/users'>UserList</Link></li>
                         <li><Link to='/projects'>ProjectList</Link></li>
                         <li><Link to='/todos'>ToDOList</Link></li>
+                        <br></br>
+                        <br></br>
                         <li>{this.is_authenticated() ? <button onClick={()=>this.logout()}>Logout</button> : <Link to='/login'>Login</Link>}</li>
+                        <br></br>
 
                     </nav>
                     <Routes>
@@ -126,6 +142,7 @@ class App extends React.Component {
                             <Route path=':userId' element={<ProjectsUser projects={this.state.projects}/>}/>
                         </Route>
                         <Route exact path='/projects' element={<ProjectList projects={this.state.projects} delete_project={(id)=>this.delete_project(id)}/>}/>
+                        <Route exact path='/projects/create' element={<ProjectForm users={this.state.users} create_project={(title,linkGitHub,users) => this.create_project(title,linkGitHub,users)}/>}/>
                         <Route exact path='/todos' element={<ToDOList todos={this.state.todos} deleteToDo={(id)=>this.deleteToDo(id)} />}/>
                         <Route path='*' element={<NotFound404/>}/>
                     </Routes>
