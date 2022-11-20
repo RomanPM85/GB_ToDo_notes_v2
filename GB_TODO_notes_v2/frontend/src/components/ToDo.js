@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from 'react-router-dom'
 
 const ToDOItem = ({todo,deleteToDo}) => {
     return (
@@ -25,6 +26,9 @@ const ToDOList = ({todos, deleteToDo}) => {
             <th>ID User</th>
             <th>status ToDo</th>
             {todos.map((todo) => <ToDOItem todo={todo} deleteToDo={deleteToDo} />)}
+            <br></br>
+            <br></br>
+            <Link to='/todos/create'>Create</Link>
         </table>
     )
 }

@@ -12,6 +12,7 @@ import NotFound404 from "./components/NotFound404"
 import LoginForm from "./components/Auth.js"
 import {BrowserRouter, Route, Routes, Link, Navigate,Redirect} from "react-router-dom"
 import ProjectForm from "./components/ProjectForm";
+import ToDoForm from "./components/ToDoForm";
 import Cookies from 'universal-cookie';
 
 class App extends React.Component {
@@ -42,6 +43,18 @@ class App extends React.Component {
         this.setState({todos: this.state.todos.filter((todo)=>todo.id !==
         id)})
         }).catch(error => console.log(error))
+    }
+
+    create_todo(text, status, project, users) {
+        const headers = this.get_headers()
+        const data = {text: text, status: status, project: project, users: users}
+        axios.post(`http://127.0.0.1:8000/api/todos/`,data,{headers})
+        .then(response => {
+            this.load_data()
+        }).catch(error => {
+            console.log(error)
+            this.setState({todos: []})
+        })
     }
 
     create_project(title, linkGitHub, users) {
@@ -144,6 +157,7 @@ class App extends React.Component {
                         <Route exact path='/projects' element={<ProjectList projects={this.state.projects} delete_project={(id)=>this.delete_project(id)}/>}/>
                         <Route exact path='/projects/create' element={<ProjectForm users={this.state.users} create_project={(title,linkGitHub,users) => this.create_project(title,linkGitHub,users)}/>}/>
                         <Route exact path='/todos' element={<ToDOList todos={this.state.todos} deleteToDo={(id)=>this.deleteToDo(id)} />}/>
+                        <Route exact path='/todos/create' element={<ToDoForm users={this.state.users} create_todo={(text, status, project, users) => this.create_todo(text, status, project, users)}/>}/>
                         <Route path='*' element={<NotFound404/>}/>
                     </Routes>
                 </BrowserRouter>
