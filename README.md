@@ -914,3 +914,18 @@ Got permission denied while trying to connect to the Docker daemon socket at uni
 Для поднятия сервера вводим следующую команду:
 
     docker-compose -f docker-compose.yml ps up
+
+Остановить контейнеры 
+
+    docker-compose -f docker-compose.yml down
+
+Запустить контейнеры демонами 
+
+    docker-compose -f docker-compose.yml up -d
+
+Посмотреть сборки контейнеров 
+
+     docker images
+Удалить images например
+    
+    docker rm postgres:15.1 
