@@ -876,3 +876,33 @@ is_superuser, is_staff. Таким образом, проект будет по�
     ...
 
 ## Сборка проекта 
+
+Установите реагирующие скрипты с помощью следующей команды:
+
+    npm install react-scripts
+
+Установите зависимости с помощью следующей команды:
+
+    npm install
+
+Запустите локальный сервер, выполнив следующую команду:
+
+    npm run start
+
+
+The project was built assuming it is hosted at the server root.
+You can control this with the homepage field in your package.json.
+For example, add this to build it for GitHub Pages:
+
+  "homepage" : "http://myname.github.io/myapp",
+
+The build folder is ready to be deployed.
+You may serve it with a static server:
+
+  npm install -g serve
+  serve -s build
+
+Find out more about deployment here:
+
+  https://bit.ly/CRA-deploy
+
