@@ -906,3 +906,24 @@ Find out more about deployment here:
 
   https://bit.ly/CRA-deploy
 
+
+для запуска 
+
+    docker ps -a
+
+Got permission denied while trying to connect to the Docker daemon socket at unix:///var/run/docker.sock:  ....
+
+Запустить следующую команду
+
+    sudo chmod 666 /var/run/docker.sock
+
+Проверить занятые порты
+
+    sudo netstat -tulpn | grep LISTEN
+
+tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      1205/postgres    
+
+Освободить занятый порт
+
+     sudo kill -9 1205
+
