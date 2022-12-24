@@ -927,3 +927,4 @@ tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      
 
      sudo kill -9 1205
 
+docker-compose -f docker-compose.yml -a
