@@ -20,7 +20,21 @@ services:
       && python manage.py makemigrations
       && python manage.py migrate
       && python manage.py createcachetable
-      && python manage.py runserver 0.0.0.0:8080
+      && gunicorn GB_TODO_notes_v2.wsgi -b 0.0.0.0:8080
       "
     depends_on:
       - db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:80
+    depends_on:
+        - backend
+  frontend:
+    build: ./frontend
+    ports:
+      - 80:80
+    depends_on:
+      - nginx
+

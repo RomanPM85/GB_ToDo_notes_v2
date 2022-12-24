@@ -928,3 +928,31 @@ tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      
      sudo kill -9 1205
 
 docker-compose -f docker-compose.yml -a
+
+Изменить запуск сервера через gunicorn, для этого добавим в файл docker-compose.yml 
+следующую строчку:
+    
+    && gunicorn GB_TODO_notes_v2.wsgi -b 0.0.0.0:8080
+
+В файле Dockerfile добавим следующую строчку:
+
+    RUN pip install gunicorn
+
+И перезапустим сервер 
+
+    docker-compose -f docker-compose.yml up -d
+
+Ошибка
+
+Пересобираем весь контейнер:
+
+    docker-compose -f docker-compose.yml up -d --build
+
+
+Смотреть логи
+
+    docker logs
+
+Сбросить сервер
+
+    docker-compose -f docker-compose.yml down
