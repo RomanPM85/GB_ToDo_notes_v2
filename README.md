@@ -972,3 +972,9 @@ docker-compose -f docker-compose.yml -a
 Ошибки CORS 
 
     net::ERR_CONNECTION_REFUSED
+
+
+Access to XMLHttpRequest at 'http://127.0.0.1:8000/api/todos/' 
+from origin 'http://0.0.0.0' has been blocked by CORS policy: 
+The request client is not a secure context and the resource is 
+in more-private address space `local`.
