@@ -936,7 +936,7 @@ docker-compose -f docker-compose.yml -a
 
 В файле Dockerfile добавим следующую строчку:
 
-    RUN pip install gunicorn
+    RUN pip3 install gunicorn
 
 И перезапустим сервер 
 
@@ -956,3 +956,15 @@ docker-compose -f docker-compose.yml -a
 Сбросить сервер
 
     docker-compose -f docker-compose.yml down
+
+Внесены корректировки в nginx/nginx.conf, добавляем в заголовки метод PUT
+
+    add_header 'Access-Control-Allow-Methods' 'GET, POST, PUT, OPTIONS, DELETE';
+
+Комментируем строку 
+
+    # add_header 'Access-Control-Allow-Origin' '*';
+
+Зайти в БД 
+
+    psql --host=127.0.0.1 --port=5432 --username=dante --dbname=todo
