@@ -38,7 +38,7 @@ class App extends React.Component {
 
     deleteToDo(id){
         const headers = this.get_headers()
-        axios.delete(`http://127.0.0.1:8000/api/todos/${id}`, {headers, headers})
+        axios.delete(`http://194.58.123.234:8000/api/todos/${id}`, {headers, headers})
         .then(response => {
         this.setState({todos: this.state.todos.filter((todo)=>todo.id !==
         id)})
@@ -48,7 +48,7 @@ class App extends React.Component {
     create_todo(text, status, project, users) {
         const headers = this.get_headers()
         const data = {text: text, status: status, project: project, users: users}
-        axios.post(`http://127.0.0.1:8000/api/todos/`,data,{headers})
+        axios.post(`http://194.58.123.234:8000/api/todos/`,data,{headers})
         .then(response => {
             this.load_data()
         }).catch(error => {
@@ -60,7 +60,7 @@ class App extends React.Component {
     create_project(title, linkGitHub, users) {
         const headers = this.get_headers()
         const data = {title: title, linkGitHub: linkGitHub, users: users}
-        axios.post(`http://127.0.0.1:8000/api/projects/`,data,{headers})
+        axios.post(`http://194.58.123.234:8000/api/projects/`,data,{headers})
         .then(response => {
             this.load_data()
         }).catch(error => {
@@ -71,7 +71,7 @@ class App extends React.Component {
 
     delete_project(id){
         const headers = this.get_headers()
-        axios.delete(`http://127.0.0.1:8000/api/projects/${id}`, {headers, headers})
+        axios.delete(`http://194.58.123.234:8000/api/projects/${id}`, {headers, headers})
         .then(response => {
         this.setState({projects: this.state.projects.filter((project)=>project.id !==
         id)})
@@ -89,7 +89,7 @@ class App extends React.Component {
     }
 
     get_token(username, password) {
-        axios.post('http://127.0.0.1:8000/api-token-auth/', {username: username, password: password})
+        axios.post('http://194.58.123.234:8000/api-token-auth/', {username: username, password: password})
         .then(response => {
             this.set_token(response.data['token'])
         }).catch(error => alert('Неверный логин или пароль'))
@@ -108,17 +108,17 @@ class App extends React.Component {
 
     load_data() {
         const headers = this.get_headers()
-        axios.get('http://127.0.0.1:8000/api/users/', {headers})
+        axios.get('http://194.58.123.234:8000/api/users/', {headers})
             .then(response => {
                 this.setState({'users': response.data})
         }).catch(error => console.log(error))
 
-        axios.get('http://127.0.0.1:8000/api/projects/', {headers})
+        axios.get('http://194.58.123.234:8000/api/projects/', {headers})
             .then(response => {
                 this.setState({'projects': response.data})
         }).catch(error => console.log(error))
 
-        axios.get('http://127.0.0.1:8000/api/todos/', {headers})
+        axios.get('http://194.58.123.234:8000/api/todos/', {headers})
             .then(response => {
                 this.setState({todos: response.data})
             }).catch(error => {
