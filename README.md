@@ -968,3 +968,7 @@ docker-compose -f docker-compose.yml -a
 Зайти в БД 
 
     psql --host=127.0.0.1 --port=5432 --username=dante --dbname=todo
+
+Ошибки CORS 
+
+    net::ERR_CONNECTION_REFUSED
