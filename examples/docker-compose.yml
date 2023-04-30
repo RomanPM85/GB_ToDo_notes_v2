@@ -1,0 +1,40 @@
+version: '3.1'
+
+services:
+  db:
+    image: postgres:15.1
+    privileged: true
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: dante
+      POSTGRES_PASSWORD: dante123456
+      POSTGRES_DB: todo
+  backend:
+    build:
+      context: .
+    ports:
+      - 8080:8080
+    command: bash -c "
+      ./wait-for-postgres.sh db
+      && python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py createcachetable
+      && gunicorn GB_TODO_notes_v2.wsgi -b 0.0.0.0:8080
+      "
+    depends_on:
+      - db
+
+  nginx:
+    build: ./nginx
+    ports:
+      - 8000:80
+    depends_on:
+        - backend
+  frontend:
+    build: ./frontend
+    ports:
+      - 80:80
+    depends_on:
+      - nginx
+
